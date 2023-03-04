@@ -1,3 +1,3 @@
 # Twizzy
 Groupe 5 
-Valentine Michelle et Ewan
+Aasmae, Nada, Idrissa, Valentine et Ewan
