@@ -172,5 +172,11 @@ public class DetectionImage {
 			Mat matchedImage = new Mat(sroadSign.rows(), sroadSign.cols()*2, sroadSign.type());
 			Features2d.drawMatches(sObject,  objectKeyPoints,  sroadSign,  signKeypoints,  matchs,  matchedImage);
 		}
+	
+	public static Vector<Mat> channels(Mat m) {
+		Vector<Mat> channel = new Vector<>();
+		Core.split(m,  channel);
+		return channel;
+	}
 
 }
