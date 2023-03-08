@@ -16,10 +16,11 @@ import org.opencv.imgproc.Imgproc;
 
 public class DetectionImage {
 	
-	public static void rgb(Vector<Mat> channels,Mat m2) {
-		Mat dst= Mat.zeros(m2.size(),m2.type());
+	public static void rgb() {
+		Mat dst;
+		dst = Mat.zeros(Init.getimage().size(),Init.getimage().type());
 		Vector<Mat> chans =new Vector<>();
-		Mat empty=Mat.zeros(m2.size(),CvType.CV_8UC1);
+		Mat empty=Mat.zeros(Init.getimage().size(),CvType.CV_8UC1);
 		for(int i=0;i<channels.size();i++) {
 			chans.removeAllElements();
 			for(int j=0; j<channels.size();j++) {
