@@ -1,10 +1,17 @@
 package projet_twizzy;
 
-import java.util.ArrayList;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
+
 import java.util.Vector;
+
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 
 import org.opencv.core.*;
 import org.opencv.features2d.DescriptorExtractor;
@@ -56,42 +63,9 @@ public class DetectionImage {
 		}
 	}
 	
-	public  Mat detectercontours(Init object) {
-		
-		int thresh=100;
-		Mat canny_output=new Mat();
-		List<MatOfPoint>contours= new ArrayList<>();
-		MatOfInt4 hierarchy= new MatOfInt4();
-		Imgproc.Canny(object.getimageseuildone(),canny_output,thresh,thresh*(double)2);
-		Imgproc.findContours(canny_output, contours, hierarchy,Imgproc.RETR_EXTERNAL,Imgproc.CHAIN_APPROX_SIMPLE);
-		Mat drawing=Mat.zeros(canny_output.size(),CvType.CV_8UC3);
-		object.setRand();
-		for(int i=0;i<contours.size();i++) {
-			Scalar color= new Scalar(object.getRand().nextInt(255 -0 +1),object.getRand().nextInt(255 -0 +1),object.getRand().nextInt(255 -0 +1));
-			Imgproc.drawContours(drawing, contours,i, color,1,8,hierarchy,0,new Point());
-		}
-		return  drawing;
-	}
-	
-	public  List<MatOfPoint> detectercontourlist(Init object) {
-		int thresh=100;
-		Mat canny_output=new Mat();
-		List<MatOfPoint>contours= new ArrayList<>();
-		MatOfInt4 hierarchy= new MatOfInt4();
-		Imgproc.Canny(object.getimageseuildone(),canny_output,thresh,thresh*(double)2);
-		Imgproc.findContours(canny_output, contours, hierarchy,Imgproc.RETR_EXTERNAL,Imgproc.CHAIN_APPROX_SIMPLE);
-		Mat drawing=Mat.zeros(canny_output.size(),CvType.CV_8UC3);
-		Random rand= new Random();
-		for(int i=0;i<contours.size();i++) {
-			Scalar color= new Scalar(rand.nextInt(255 -0 +1),rand.nextInt(255 -0 +1),rand.nextInt(255 -0 +1));
-			Imgproc.drawContours(drawing, contours,i, color,1,8,hierarchy,0,new Point());
-		}
-		
-		return  contours;
-	}
 	
 	public  void detectioncerclerouge(Init object) {
-		List<MatOfPoint>contours=detectercontourlist(object);
+		List<MatOfPoint>contours=object.getDetectercontourlist();
 		MatOfPoint2f matOfPoint2f =new MatOfPoint2f();
 		float[] radius =new float[1];
 		Point center= new Point();
@@ -109,7 +83,7 @@ public class DetectionImage {
 	}	
 	public  Mat detection_ball(Init object) {
 		Mat matricenull=new Mat();
-		List<MatOfPoint>contours=detectercontourlist(object);
+		List<MatOfPoint>contours=object.getDetectercontourlist();
 		MatOfPoint2f matOfPoint2f =new MatOfPoint2f();
 		float[] radius =new float[1];
 		Point center= new Point();
@@ -142,36 +116,47 @@ public class DetectionImage {
 		Mat sObject=new Mat();
 		Imgproc.resize(object.getimageread(),sObject,sroadSign.size());
 		Mat grayObject=new Mat(sObject.rows(),sObject.cols(),sObject.type());
-		
-
+		Imgproc.cvtColor(sObject,  grayObject, Imgproc.COLOR_BGRA2GRAY);
+		Core.normalize(grayObject, grayObject, 0, 255, Core.NORM_MINMAX);
+		Mat graySign = new Mat(sroadSign.rows(), sroadSign.cols(), sroadSign.type());
+		Imgproc.cvtColor(sroadSign,  graySign,  Imgproc.COLOR_BGRA2GRAY);
+		Core.normalize(graySign,  graySign, 0, 255, Core.NORM_MINMAX);
 			
-			Imgproc.cvtColor(sObject,  grayObject, Imgproc.COLOR_BGRA2GRAY);
-			Core.normalize(grayObject, grayObject, 0, 255, Core.NORM_MINMAX);
-			Mat graySign = new Mat(sroadSign.rows(), sroadSign.cols(), sroadSign.type());
-			Imgproc.cvtColor(sroadSign,  graySign,  Imgproc.COLOR_BGRA2GRAY);
-			Core.normalize(graySign,  graySign, 0, 255, Core.NORM_MINMAX);
-			
-			//Extraction des caractéristiques
-			FeatureDetector orbDetector = FeatureDetector.create(FeatureDetector.ORB);
-			DescriptorExtractor orbExtractor = DescriptorExtractor.create(DescriptorExtractor.ORB);
-			MatOfKeyPoint objectKeyPoints = new MatOfKeyPoint();
-			orbDetector.detect(grayObject, objectKeyPoints);
-			MatOfKeyPoint signKeypoints = new MatOfKeyPoint();
-			orbDetector.detect(graySign, signKeypoints);
-			Mat objectDescriptor = new Mat(object.getimageread().rows(), object.getimageread().cols(), object.getimageread().type());
-			orbExtractor.compute(grayObject, objectKeyPoints, objectDescriptor);
-			Mat signDescriptor = new Mat(sroadSign.rows(), sroadSign.cols(), sroadSign.type());
-			orbExtractor.compute(grayObject, signKeypoints, signDescriptor);	
+		//Extraction des caractéristiques
+		FeatureDetector orbDetector = FeatureDetector.create(FeatureDetector.ORB);
+		DescriptorExtractor orbExtractor = DescriptorExtractor.create(DescriptorExtractor.ORB);
+		MatOfKeyPoint objectKeyPoints = new MatOfKeyPoint();
+		orbDetector.detect(grayObject, objectKeyPoints);
+		MatOfKeyPoint signKeypoints = new MatOfKeyPoint();
+		orbDetector.detect(graySign, signKeypoints);
+		Mat objectDescriptor = new Mat(object.getimageread().rows(), object.getimageread().cols(), object.getimageread().type());
+		orbExtractor.compute(grayObject, objectKeyPoints, objectDescriptor);
+		Mat signDescriptor = new Mat(sroadSign.rows(), sroadSign.cols(), sroadSign.type());
+		orbExtractor.compute(grayObject, signKeypoints, signDescriptor);	
 			
 			//matching
-			MatOfDMatch matchs = new MatOfDMatch();
-			DescriptorMatcher matcher = DescriptorMatcher.create(DescriptorMatcher.BRUTEFORCE);
-			matcher.match(objectDescriptor, signDescriptor, matchs);
-			System.out.println(matchs.dump());
-			Mat matchedImage = new Mat(sroadSign.rows(), sroadSign.cols()*2, sroadSign.type());
-			Features2d.drawMatches(sObject,  objectKeyPoints,  sroadSign,  signKeypoints,  matchs,  matchedImage);
+		MatOfDMatch matchs = new MatOfDMatch();
+		DescriptorMatcher matcher = DescriptorMatcher.create(DescriptorMatcher.BRUTEFORCE);
+		matcher.match(objectDescriptor, signDescriptor, matchs);
+		System.out.println(matchs.dump());
+		Mat matchedImage = new Mat(sroadSign.rows(), sroadSign.cols()*2, sroadSign.type());
+		Features2d.drawMatches(sObject,  objectKeyPoints,  sroadSign,  signKeypoints,  matchs,  matchedImage);
 		}
-	
+	public static void ImShow(String title,Mat m) {
+		MatOfByte matOfByte= new MatOfByte();
+		Highgui.imencode(".png",m,matOfByte);
+		byte[] byteArray = matOfByte.toArray();
+		BufferedImage bufImage=null;
+		try {
+			InputStream in =new ByteArrayInputStream(byteArray);
+			bufImage=ImageIO.read(in);
+			JFrame frame = new JFrame();
+			frame.setTitle(title);
+			frame.getContentPane().add(new JLabel(new ImageIcon(bufImage)));
+			frame.pack();
+			frame.setVisible(true);
+		}catch(Exception e) {
+			e.printStackTrace();}}
 
 	}
 
