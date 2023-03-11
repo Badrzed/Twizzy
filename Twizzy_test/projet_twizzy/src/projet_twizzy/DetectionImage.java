@@ -7,11 +7,16 @@ import java.util.Random;
 import java.util.Vector;
 
 import org.opencv.core.*;
+import org.opencv.features2d.DescriptorExtractor;
+import org.opencv.features2d.DescriptorMatcher;
+import org.opencv.features2d.FeatureDetector;
+import org.opencv.features2d.Features2d;
+import org.opencv.highgui.Highgui;
 import org.opencv.imgproc.Imgproc;
 
 public class DetectionImage {
 	
-	public static void rgb(Init object) {
+	public  void rgb(Init object) {
 		Mat dst;
 		dst = Mat.zeros(object.getimageread().size(),object.getimageread().type());
 		Vector<Mat> chans =new Vector<>();
@@ -30,7 +35,7 @@ public class DetectionImage {
 		Core.merge(chans, dst);
 	}}
 	
-	public static void rgb2hsv(Init object) {
+	public  void rgb2hsv(Init object) {
 		Mat output = object.gethsv();
 		Core.split(object.getimageread(),object.getchannels());
 		double[][] hsv_values= {{1,255,255},{179,1,255},{179,0,1}};
@@ -51,29 +56,29 @@ public class DetectionImage {
 		}
 	}
 	
-	public static Mat detectercontours(Init object) {
+	public  Mat detectercontours(Init object) {
 		
 		int thresh=100;
 		Mat canny_output=new Mat();
-		List<MatOfPoint>contours= new ArrayList<MatOfPoint>();
+		List<MatOfPoint>contours= new ArrayList<>();
 		MatOfInt4 hierarchy= new MatOfInt4();
-		Imgproc.Canny(object.getimageseuildone(),canny_output,thresh,thresh*2);
+		Imgproc.Canny(object.getimageseuildone(),canny_output,thresh,thresh*(double)2);
 		Imgproc.findContours(canny_output, contours, hierarchy,Imgproc.RETR_EXTERNAL,Imgproc.CHAIN_APPROX_SIMPLE);
 		Mat drawing=Mat.zeros(canny_output.size(),CvType.CV_8UC3);
-		Random rand= new Random();
+		object.setRand();
 		for(int i=0;i<contours.size();i++) {
-			Scalar color= new Scalar(rand.nextInt(255 -0 +1),rand.nextInt(255 -0 +1),rand.nextInt(255 -0 +1));
+			Scalar color= new Scalar(object.getRand().nextInt(255 -0 +1),object.getRand().nextInt(255 -0 +1),object.getRand().nextInt(255 -0 +1));
 			Imgproc.drawContours(drawing, contours,i, color,1,8,hierarchy,0,new Point());
 		}
 		return  drawing;
 	}
 	
-	public static List<MatOfPoint> detectercontourlist(Init object) {
+	public  List<MatOfPoint> detectercontourlist(Init object) {
 		int thresh=100;
 		Mat canny_output=new Mat();
-		List<MatOfPoint>contours= new ArrayList<MatOfPoint>();
+		List<MatOfPoint>contours= new ArrayList<>();
 		MatOfInt4 hierarchy= new MatOfInt4();
-		Imgproc.Canny(object.getimageseuildone(),canny_output,thresh,thresh*2);
+		Imgproc.Canny(object.getimageseuildone(),canny_output,thresh,thresh*(double)2);
 		Imgproc.findContours(canny_output, contours, hierarchy,Imgproc.RETR_EXTERNAL,Imgproc.CHAIN_APPROX_SIMPLE);
 		Mat drawing=Mat.zeros(canny_output.size(),CvType.CV_8UC3);
 		Random rand= new Random();
@@ -85,7 +90,7 @@ public class DetectionImage {
 		return  contours;
 	}
 	
-	public static void detectioncerclerouge(Init object) {
+	public  void detectioncerclerouge(Init object) {
 		List<MatOfPoint>contours=detectercontourlist(object);
 		MatOfPoint2f matOfPoint2f =new MatOfPoint2f();
 		float[] radius =new float[1];
@@ -101,11 +106,10 @@ public class DetectionImage {
 		}
 		//return m;
 		
-	}
-/*	
-	public static Mat detection_ball(Mat m) {
+	}	
+	public  Mat detection_ball(Init object) {
 		Mat matricenull=new Mat();
-		List<MatOfPoint>contours=detectercontourlist(m);
+		List<MatOfPoint>contours=detectercontourlist(object);
 		MatOfPoint2f matOfPoint2f =new MatOfPoint2f();
 		float[] radius =new float[1];
 		Point center= new Point();
@@ -115,10 +119,10 @@ public class DetectionImage {
 			matOfPoint2f.fromList(contour.toList());
 			Imgproc.minEnclosingCircle(matOfPoint2f, center, radius);
 			if((contourArea/(Math.PI*radius[0]*radius[0]))>=0.8) {
-				Core.circle(m, center, (int)radius[0], new Scalar(0,255,0),2);
+				Core.circle(object.getimageread(), center, (int)radius[0], new Scalar(0,255,0),2);
 				Rect rect =Imgproc.boundingRect(contour);
-				Core.rectangle(m, new Point(rect.x,rect.y), new Point(rect.x+rect.width,rect.y+rect.height), new Scalar(0,255,0),2);
-				Mat tmp=m.submat(rect.y,rect.y+rect.height,rect.x,rect.x+rect.width);
+				Core.rectangle(object.getimageread(), new Point(rect.x,rect.y), new Point(rect.x+(double)rect.width,rect.y+(double)rect.height), new Scalar(0,255,0),2);
+				Mat tmp=object.getimageread().submat(rect.y,rect.y+rect.height,rect.x,rect.x+rect.width);
 				Mat ball=Mat.zeros(tmp.size(),tmp.type());
 				tmp.copyTo(ball);
 				return ball;
@@ -133,10 +137,10 @@ public class DetectionImage {
 		
 	}
 	
-	public static void misealecchelle(String objectfile,Mat object) {
-		Mat sroadSign=Highgui.imread(objectfile);
+	public  void misealecchelle(String panel,Init object) {
+		Mat sroadSign=Highgui.imread(panel);
 		Mat sObject=new Mat();
-		Imgproc.resize(object,sObject,sroadSign.size());
+		Imgproc.resize(object.getimageread(),sObject,sroadSign.size());
 		Mat grayObject=new Mat(sObject.rows(),sObject.cols(),sObject.type());
 		
 
@@ -154,7 +158,7 @@ public class DetectionImage {
 			orbDetector.detect(grayObject, objectKeyPoints);
 			MatOfKeyPoint signKeypoints = new MatOfKeyPoint();
 			orbDetector.detect(graySign, signKeypoints);
-			Mat objectDescriptor = new Mat(object.rows(), object.cols(), object.type());
+			Mat objectDescriptor = new Mat(object.getimageread().rows(), object.getimageread().cols(), object.getimageread().type());
 			orbExtractor.compute(grayObject, objectKeyPoints, objectDescriptor);
 			Mat signDescriptor = new Mat(sroadSign.rows(), sroadSign.cols(), sroadSign.type());
 			orbExtractor.compute(grayObject, signKeypoints, signDescriptor);	
@@ -168,10 +172,7 @@ public class DetectionImage {
 			Features2d.drawMatches(sObject,  objectKeyPoints,  sroadSign,  signKeypoints,  matchs,  matchedImage);
 		}
 	
-	public static Vector<Mat> channels(Mat m) {
-		Vector<Mat> channel = new Vector<>();
-		Core.split(m,  channel);
-		return channel;*/
+
 	}
 
 

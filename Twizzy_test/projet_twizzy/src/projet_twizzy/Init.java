@@ -1,6 +1,7 @@
 package projet_twizzy;
 
 import java.io.File;
+import java.util.Random;
 import java.util.Vector;
 
 import org.opencv.core.*;
@@ -13,6 +14,7 @@ public class Init {
 	private Mat hsvimagemade;
 	private Vector<Mat> channelsmade;
 	private String fichier;
+	private Random rand;
 	
 	public Init(Mat imageread,Mat hsvimagemade,String fichier,Vector<Mat> channelsmade, Mat seuilplusieurdone) {
 		this.fichier=fichier;
@@ -20,6 +22,7 @@ public class Init {
 		this.hsvimagemade=hsvimagemade;
 		this.channelsmade=channelsmade;
 		this.seuilplusieurdone= seuilplusieurdone;
+		this.rand=new Random();
 		
 	}
 	
@@ -88,6 +91,18 @@ public void setseuildone(Mat hsv_image) {
 	public String getFichier() {
 			return fichier;
 		}
+
+
+
+	public Random getRand() {
+		return rand;
+	}
+
+
+
+	public void setRand() {
+		this.rand =new Random();
+	}
 	
 	
 	
