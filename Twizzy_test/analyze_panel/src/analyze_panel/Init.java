@@ -7,7 +7,7 @@ import org.opencv.core.*;
 import org.opencv.highgui.*;
 import org.opencv.imgproc.*;
 
-public class Init {
+public  class Init {
 	private  Mat imageread;
 	private  Mat seuilplusieurdone;
 	private Mat hsvimagemade;
