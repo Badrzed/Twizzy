@@ -78,7 +78,7 @@ public class DetectionImage {
 				Core.circle(object.getimageread(), center, (int)radius[0], new Scalar(0,255,0),2);
 			}
 		}
-		//return m;
+
 		
 	}	
 	public  Mat detection_ball(Init object) {

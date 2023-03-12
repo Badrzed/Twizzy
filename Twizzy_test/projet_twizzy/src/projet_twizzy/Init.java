@@ -27,8 +27,8 @@ public class Init {
 		setchannels(imageread);
 		setseuildone(hsvimagemade);
 		this.rand=new Random();
-		setContours(imageread, seuilplusieurdone, rand);
-		setDetectercontourlist (imageread,seuilplusieurdone,rand);
+		setContours(seuilplusieurdone, rand);
+		setDetectercontourlist (seuilplusieurdone,rand);
 		
 	}
 	
@@ -62,35 +62,35 @@ public class Init {
 		Imgproc.cvtColor(m,hsv_image, Imgproc.COLOR_BGR2HSV);
 		return hsv_image;
 	}
-	public  Mat detectercontours(Mat m,Mat seuil,Random rand) {
+	public  Mat detectercontours(Mat seuil,Random rand) {
 		
 		int thresh=100;
 		Mat canny_output=new Mat();
-		List<MatOfPoint>contours= new ArrayList<>();
+		List<MatOfPoint>cont0ur= new ArrayList<>();
 		MatOfInt4 hierarchy= new MatOfInt4();
 		Imgproc.Canny(seuil,canny_output,thresh,thresh*(double)2);
-		Imgproc.findContours(canny_output, contours, hierarchy,Imgproc.RETR_EXTERNAL,Imgproc.CHAIN_APPROX_SIMPLE);
+		Imgproc.findContours(canny_output, cont0ur, hierarchy,Imgproc.RETR_EXTERNAL,Imgproc.CHAIN_APPROX_SIMPLE);
 		Mat drawing=Mat.zeros(canny_output.size(),CvType.CV_8UC3);
-		for(int i=0;i<contours.size();i++) {
+		for(int i=0;i<cont0ur.size();i++) {
 			Scalar color= new Scalar(rand.nextInt(255 -0 +1),rand.nextInt(255 -0 +1),rand.nextInt(255 -0 +1));
-			Imgproc.drawContours(drawing, contours,i, color,1,8,hierarchy,0,new Point());
+			Imgproc.drawContours(drawing, cont0ur,i, color,1,8,hierarchy,0,new Point());
 		}
 		return  drawing;
 	}
-	public  List<MatOfPoint> detectercontourslist(Mat m,Mat seuil,Random rand) {
+	public  List<MatOfPoint> detectercontourslist(Mat seuil,Random rand) {
 		
 		int thresh=100;
 		Mat canny_output=new Mat();
-		List<MatOfPoint>contours= new ArrayList<>();
+		List<MatOfPoint>cont0ur= new ArrayList<>();
 		MatOfInt4 hierarchy= new MatOfInt4();
 		Imgproc.Canny(seuil,canny_output,thresh,thresh*(double)2);
-		Imgproc.findContours(canny_output, contours, hierarchy,Imgproc.RETR_EXTERNAL,Imgproc.CHAIN_APPROX_SIMPLE);
+		Imgproc.findContours(canny_output, cont0ur, hierarchy,Imgproc.RETR_EXTERNAL,Imgproc.CHAIN_APPROX_SIMPLE);
 		Mat drawing=Mat.zeros(canny_output.size(),CvType.CV_8UC3);
-		for(int i=0;i<contours.size();i++) {
+		for(int i=0;i<cont0ur.size();i++) {
 			Scalar color= new Scalar(rand.nextInt(255 -0 +1),rand.nextInt(255 -0 +1),rand.nextInt(255 -0 +1));
-			Imgproc.drawContours(drawing, contours,i, color,1,8,hierarchy,0,new Point());
+			Imgproc.drawContours(drawing, cont0ur,i, color,1,8,hierarchy,0,new Point());
 		}
-		return  contours;
+		return  cont0ur;
 	}
 	
 	public void setimageread(String fichier) {
@@ -152,8 +152,8 @@ public void setseuildone(Mat hsv_image) {
 
 
 
-	public void setContours(Mat m,Mat seuil,Random rand) {
-		this.contours =detectercontours(m,seuil,rand) ;
+	public void setContours(Mat seuil,Random rand) {
+		this.contours =detectercontours(seuil,rand) ;
 	}
 
 
@@ -164,8 +164,8 @@ public void setseuildone(Mat hsv_image) {
 
 
 
-	public void setDetectercontourlist(Mat m,Mat seuil,Random rand) {
-		this.detectercontourlist = detectercontourslist(m,seuil,rand);
+	public void setDetectercontourlist(Mat seuil,Random rand) {
+		this.detectercontourlist = detectercontourslist(seuil,rand);
 	}
 
 	
