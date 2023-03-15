@@ -20,6 +20,8 @@ public class Init {
 	private Mat contours;
 	private  List<MatOfPoint> detectercontourlist;
 	
+	
+	
 	public Init(String fichier) {
 		this.fichier=fichier;
 		setimageread(fichier);
@@ -167,8 +169,5 @@ public void setseuildone(Mat hsv_image) {
 	public void setDetectercontourlist(Mat seuil,Random rand) {
 		this.detectercontourlist = detectercontourslist(seuil,rand);
 	}
-
-	
-
 	
 }

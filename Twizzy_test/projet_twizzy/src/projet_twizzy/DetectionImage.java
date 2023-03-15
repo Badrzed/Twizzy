@@ -81,7 +81,7 @@ public class DetectionImage {
 
 		
 	}	
-	public  Mat detection_ball(Init object) {
+	public static Mat detection_ball(Init object) {
 		Mat matricenull=new Mat();
 		List<MatOfPoint>contours=object.getDetectercontourlist();
 		MatOfPoint2f matOfPoint2f =new MatOfPoint2f();
@@ -111,7 +111,7 @@ public class DetectionImage {
 		
 	}
 	
-	public  void misealecchelle(String panel,Init object) {
+	public static  void misealecchelle(String panel,Init object) {
 		Mat sroadSign=Highgui.imread(panel);
 		Mat sObject=new Mat();
 		Imgproc.resize(object.getimageread(),sObject,sroadSign.size());
@@ -120,8 +120,7 @@ public class DetectionImage {
 		Core.normalize(grayObject, grayObject, 0, 255, Core.NORM_MINMAX);
 		Mat graySign = new Mat(sroadSign.rows(), sroadSign.cols(), sroadSign.type());
 		Imgproc.cvtColor(sroadSign,  graySign,  Imgproc.COLOR_BGRA2GRAY);
-		Core.normalize(graySign,  graySign, 0, 255, Core.NORM_MINMAX);
-			
+		Core.normalize(graySign,  graySign, 0, 255, Core.NORM_MINMAX);	
 		//Extraction des caractéristiques
 		FeatureDetector orbDetector = FeatureDetector.create(FeatureDetector.ORB);
 		DescriptorExtractor orbExtractor = DescriptorExtractor.create(DescriptorExtractor.ORB);
@@ -133,7 +132,6 @@ public class DetectionImage {
 		orbExtractor.compute(grayObject, objectKeyPoints, objectDescriptor);
 		Mat signDescriptor = new Mat(sroadSign.rows(), sroadSign.cols(), sroadSign.type());
 		orbExtractor.compute(grayObject, signKeypoints, signDescriptor);	
-			
 			//matching
 		MatOfDMatch matchs = new MatOfDMatch();
 		DescriptorMatcher matcher = DescriptorMatcher.create(DescriptorMatcher.BRUTEFORCE);
@@ -141,6 +139,7 @@ public class DetectionImage {
 		System.out.println(matchs.dump());
 		Mat matchedImage = new Mat(sroadSign.rows(), sroadSign.cols()*2, sroadSign.type());
 		Features2d.drawMatches(sObject,  objectKeyPoints,  sroadSign,  signKeypoints,  matchs,  matchedImage);
+		ImShow("Test",matchedImage);
 		}
 	public static void ImShow(String title,Mat m) {
 		MatOfByte matOfByte= new MatOfByte();
