@@ -39,6 +39,7 @@ public class Videos implements  ControllerListener{
   //Constructeur
   public Videos(String a){
 	  super();
+	  
 	  try{
 		  /*La création du lecteur et le chargement du fichier à lire.*/
 		  player = Manager.createPlayer( new MediaLocator(a) );
@@ -53,6 +54,7 @@ public class Videos implements  ControllerListener{
 		  System.out.println("Patientez S'il vous plait."); 
 		  
 		  player.realize();
+		 
 	  } catch (Exception e) {
 		  /*Traitement des erreurs qui peuvent survenir lors de la création du lecteur.*/
 		  System.out.println("Error creating player");
