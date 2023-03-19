@@ -136,7 +136,7 @@ public class DetectionImage {
 		MatOfDMatch matchs = new MatOfDMatch();
 		DescriptorMatcher matcher = DescriptorMatcher.create(DescriptorMatcher.BRUTEFORCE);
 		matcher.match(objectDescriptor, signDescriptor, matchs);
-		System.out.println(matchs.dump());
+		//System.out.println(matchs.dump());
 		Mat matchedImage = new Mat(sroadSign.rows(), sroadSign.cols()*2, sroadSign.type());
 		Features2d.drawMatches(sObject,  objectKeyPoints,  sroadSign,  signKeypoints,  matchs,  matchedImage);
 		ImShow("Test",matchedImage);
@@ -157,6 +157,75 @@ public class DetectionImage {
 		}catch(Exception e) {
 			e.printStackTrace();}}
 
+	
+public static  Mat misealecchelle2(String panel,Init object) {
+	Mat sroadSign=Highgui.imread(panel);
+	Mat sObject=new Mat();
+	Imgproc.resize(object.getimageread(),sObject,sroadSign.size());
+	Mat grayObject=new Mat(sObject.rows(),sObject.cols(),sObject.type());
+	Imgproc.cvtColor(sObject,  grayObject, Imgproc.COLOR_BGRA2GRAY);
+	Core.normalize(grayObject, grayObject, 0, 255, Core.NORM_MINMAX);
+	Mat graySign = new Mat(sroadSign.rows(), sroadSign.cols(), sroadSign.type());
+	Imgproc.cvtColor(sroadSign,  graySign,  Imgproc.COLOR_BGRA2GRAY);
+	Core.normalize(graySign,  graySign, 0, 255, Core.NORM_MINMAX);	
+	//Extraction des caractéristiques
+	FeatureDetector orbDetector = FeatureDetector.create(FeatureDetector.ORB);
+	DescriptorExtractor orbExtractor = DescriptorExtractor.create(DescriptorExtractor.ORB);
+	MatOfKeyPoint objectKeyPoints = new MatOfKeyPoint();
+	orbDetector.detect(grayObject, objectKeyPoints);
+	MatOfKeyPoint signKeypoints = new MatOfKeyPoint();
+	orbDetector.detect(graySign, signKeypoints);
+	Mat objectDescriptor = new Mat(object.getimageread().rows(), object.getimageread().cols(), object.getimageread().type());
+	orbExtractor.compute(grayObject, objectKeyPoints, objectDescriptor);
+	Mat signDescriptor = new Mat(sroadSign.rows(), sroadSign.cols(), sroadSign.type());
+	orbExtractor.compute(grayObject, signKeypoints, signDescriptor);	
+		//matching
+	MatOfDMatch matchs = new MatOfDMatch();
+	DescriptorMatcher matcher = DescriptorMatcher.create(DescriptorMatcher.BRUTEFORCE);
+	matcher.match(objectDescriptor, signDescriptor, matchs);
+	//System.out.println(matchs.dump());
+	Mat matchedImage = new Mat(sroadSign.rows(), sroadSign.cols()*2, sroadSign.type());
+	Features2d.drawMatches(sObject,  objectKeyPoints,  sroadSign,  signKeypoints,  matchs,  matchedImage);
+	ImShow("Test",matchedImage);
+	return matchs;
+	}
+	public static  String misealecchelle3(String panel,Init object) {
+		Mat sroadSign=Highgui.imread(panel);
+		Mat sObject=new Mat();
+		Imgproc.resize(object.getimageread(),sObject,sroadSign.size());
+		Mat grayObject=new Mat(sObject.rows(),sObject.cols(),sObject.type());
+		Imgproc.cvtColor(sObject,  grayObject, Imgproc.COLOR_BGRA2GRAY);
+		Core.normalize(grayObject, grayObject, 0, 255, Core.NORM_MINMAX);
+		Mat graySign = new Mat(sroadSign.rows(), sroadSign.cols(), sroadSign.type());
+		Imgproc.cvtColor(sroadSign,  graySign,  Imgproc.COLOR_BGRA2GRAY);
+		Core.normalize(graySign,  graySign, 0, 255, Core.NORM_MINMAX);	
+		//Extraction des caractéristiques
+		FeatureDetector orbDetector = FeatureDetector.create(FeatureDetector.ORB);
+		DescriptorExtractor orbExtractor = DescriptorExtractor.create(DescriptorExtractor.ORB);
+		MatOfKeyPoint objectKeyPoints = new MatOfKeyPoint();
+		orbDetector.detect(grayObject, objectKeyPoints);
+		MatOfKeyPoint signKeypoints = new MatOfKeyPoint();
+		orbDetector.detect(graySign, signKeypoints);
+		Mat objectDescriptor = new Mat(object.getimageread().rows(), object.getimageread().cols(), object.getimageread().type());
+		orbExtractor.compute(grayObject, objectKeyPoints, objectDescriptor);
+		Mat signDescriptor = new Mat(sroadSign.rows(), sroadSign.cols(), sroadSign.type());
+		orbExtractor.compute(grayObject, signKeypoints, signDescriptor);	
+			//matching
+		MatOfDMatch matchs = new MatOfDMatch();
+		DescriptorMatcher matcher = DescriptorMatcher.create(DescriptorMatcher.BRUTEFORCE);
+		matcher.match(objectDescriptor, signDescriptor, matchs);
+		String str= matchs.dump();
+		String[] sentences = str.split(", ");
+		System.out.println(sentences[1]);
+		
+		//System.out.println(matchs.dump());
+		/*Mat matchedImage = new Mat(sroadSign.rows(), sroadSign.cols()*2, sroadSign.type());
+		Features2d.drawMatches(sObject,  objectKeyPoints,  sroadSign,  signKeypoints,  matchs,  matchedImage);
+		ImShow("Test",matchedImage);*/
+		//System.out.println();
+		return  sentences[1];
+		
+
 	}
 
-
+}

@@ -20,14 +20,52 @@ public class Run {
 		public void go(){
 			Mat dect= DetectionImage.detection_ball(imageTraite);
 			imageTraite.changeimageread(dect);
+			List<Integer> listedesref=new ArrayList<>();
+			int indicemin=0;		
 			for (int i=0;i<imageRef.size();i++) {
-				DetectionImage.misealecchelle(imageRef.get(i).getFichier(),imageTraite );
-				System.out.println("\n");
-				System.out.println("\n");
+				System.out.println(i);
+				String a=DetectionImage.misealecchelle3(imageRef.get(i).getFichier(),imageTraite);
+				try {
+				    Integer b = Integer.parseInt(a);
+				    listedesref.add(b);
+				} catch (NumberFormatException e) {
+				    System.out.println("Error parsing " + a + " to an Integer");
+				    e.printStackTrace();
+				}
+			}
+			for(int i=0;i<listedesref.size();i++) {
+				if(listedesref.get(i)<=listedesref.get(indicemin)) {
+					indicemin=i;	
+				}}
+			DetectionImage.misealecchelle(imageRef.get(indicemin).getFichier(),imageTraite);
+			switch(indicemin) {
+			case 0:
+				System.out.println("panneau30");
+				break;
+			
+			case 1:
+				System.out.println("panneau50");
+				break;
+			case 2:
+				System.out.println("panneau70");
+				break;
+			case 3:
+				System.out.println("panneau90");
+				break;
+			case 4:
+				System.out.println("pannea110");
+				break;
+			case 5:
+				System.out.println("double");
+				break;
+			default:
+				System.out.println("no panel");
+				break;
+			}
 			}
 			
 	
-		}
+		
 		
 		public void setstringImage(String stringImage) {
 			this.stringImage = stringImage;
