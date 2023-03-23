@@ -2,7 +2,13 @@ package projet_twizzy;
 
 import java.io.File;
 
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+
 import org.opencv.core.Core;
+import org.opencv.core.Mat;
+import org.opencv.highgui.VideoCapture;
 
 import javafx.application.Application;
 import javafx.scene.Group;
@@ -14,8 +20,11 @@ import javafx.stage.Stage;
 import javafx.scene.layout.Pane;
 
 public class VideoPlayer extends Application {
+	private static JPanel panel2 ;
+	
 	public static void main(String[] args) {
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+		
 		Run nouvelleimage=new Run("p10.png");
 		nouvelleimage.go();
 		launch(args);
@@ -40,4 +49,15 @@ public class VideoPlayer extends Application {
         primaryStage.show();
         mediaPlayer.play();
     }
+    
+    public static void LectureVideo(String nomVideo) {
+    	Mat frame = new Mat();
+    	VideoCapture camera = new VideoCapture(nomVideo);
+
+    	while (camera.read(frame)) {
+    		Run nouvelleimage=new Run(frame);
+    		nouvelleimage.go();		 		
+    		}
+    	}
+    
 }

@@ -3,8 +3,13 @@ package projet_twizzy;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+
 //import org.opencv.core.Core;
 import org.opencv.core.Mat;
+import org.opencv.highgui.VideoCapture;
 
 public class Run {
 		private List<Init> imageRef; //image reference
