@@ -15,11 +15,17 @@ public class Run {
 		private List<Init> imageRef; //image reference
 		private Init imageTraite; //image qu'on veut comparer
 		private String stringImage; //image qu'on veut comparer
+		private Mat mat;
 		
 		public Run(String stringImage) {
 			this.stringImage = stringImage;
 			setImageRef();
 			setimageTraite(stringImage);
+		}
+		public Run(Mat mat) {
+			this.mat=mat;
+			setImageRef();
+			setimageTraite2(mat);
 		}
 		
 		public void go(){
@@ -106,5 +112,8 @@ public class Run {
 	
 public void setimageTraite(String stringimage) {
 	this.imageTraite = new Init(stringimage);
+}
+public void setimageTraite2(Mat mat) {
+	this.imageTraite= new Init(mat); 
 }
 }
