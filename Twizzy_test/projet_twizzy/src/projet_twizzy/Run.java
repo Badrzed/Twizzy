@@ -34,18 +34,16 @@ public class Run {
 			List<Integer> listedesref=new ArrayList<>();
 			int indicemin=0;		
 			for (int i=0;i<imageRef.size();i++) {
-				System.out.println(i);
-				String a=DetectionImage.misealecchelle3(imageRef.get(i).getFichier(),imageTraite);
-				try {
-				    Integer b = Integer.parseInt(a);
-				    listedesref.add(b);
-				} catch (NumberFormatException e) {
-				    System.out.println("Error parsing " + a + " to an Integer");
-				    e.printStackTrace();
-				}
+				//System.out.println(i);
+				int a=DetectionImage.misealecchelle3(imageRef.get(i).getFichier(),imageTraite);
+				System.out.println(a);
+				  
+				    listedesref.add(a);
+				
+				
 			}
 			for(int i=0;i<listedesref.size();i++) {
-				if(listedesref.get(i)<=listedesref.get(indicemin)) {
+				if(listedesref.get(i)>=listedesref.get(indicemin)) {
 					indicemin=i;	
 				}}
 			DetectionImage.misealecchelle(imageRef.get(indicemin).getFichier(),imageTraite);

@@ -25,9 +25,9 @@ public class VideoPlayer extends Application {
 	public static void main(String[] args) {
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 		
-		Run nouvelleimage=new Run("p10.png");
+		Run nouvelleimage=new Run("ref70.png");
 		nouvelleimage.go();
-		launch(args);
+		//launch(args);
 		
 		/*DetectionImage.ImShow("pascontour",image.getimageread());
 		DetectionImage.ImShow("contour",image.getContours());*/

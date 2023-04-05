@@ -189,7 +189,7 @@ public static  Mat misealecchelle2(String panel,Init object) {
 	ImShow("Test",matchedImage);
 	return matchs;
 	}
-	public static  String misealecchelle3(String panel,Init object) {
+	public static  int misealecchelle3(String panel,Init object) {
 		Mat sroadSign=Highgui.imread(panel);
 		Mat sObject=new Mat();
 		Imgproc.resize(object.getimageread(),sObject,sroadSign.size());
@@ -215,15 +215,33 @@ public static  Mat misealecchelle2(String panel,Init object) {
 		DescriptorMatcher matcher = DescriptorMatcher.create(DescriptorMatcher.BRUTEFORCE);
 		matcher.match(objectDescriptor, signDescriptor, matchs);
 		String str= matchs.dump();
-		String[] sentences = str.split(", ");
-		System.out.println(sentences[1]);
+		//System.out.println(str);
+		String[] sentences = str.split("\\s*(; |, |\\s)\\s*");
+		
+		/*Ici j'ai pris le matchs.dump qui donne la matrice des matcher et j'ai recuperer les donnees
+		 * de la matrice matcher et j'ai fait la moyenne de la deuxieme collonne sachant qu'il il ya 4 colonnes et 266 lignes 
+		 * il faut recuperer la deuxieme valeur de chaque lignes sachant qu'on a decouper la matrice en une liste qui contient toutes les valeurs */
+		int sum=0;
+		for(int i=1;i<sentences.length;i=i+4) {//ici on commence a 1 pour prendre la deuxieme valeur de la ligne 1
+			//on itere de 4 en 4 car 4 colonne et on veut toujours la deuxieme colonnne
+			try {
+			    Integer b = Integer.parseInt(sentences[i]);
+			    sum=sum+b;
+			} catch (NumberFormatException e) {
+			    System.out.println("Error parsing " + sentences[i] + " to an Integer");
+			    e.printStackTrace();
+			}
+			
+		}
+		//System.out.println(sentences.length);
+		return sum/sentences.length;// et donc la fonction renvoie la moyenne de la deuxieme colonne
 		
 		//System.out.println(matchs.dump());
 		/*Mat matchedImage = new Mat(sroadSign.rows(), sroadSign.cols()*2, sroadSign.type());
 		Features2d.drawMatches(sObject,  objectKeyPoints,  sroadSign,  signKeypoints,  matchs,  matchedImage);
 		ImShow("Test",matchedImage);*/
 		//System.out.println();
-		return  sentences[1];
+		
 		
 
 	}
