@@ -3,18 +3,29 @@ package projet_twizzy;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+
 //import org.opencv.core.Core;
 import org.opencv.core.Mat;
+import org.opencv.highgui.VideoCapture;
 
 public class Run {
 		private List<Init> imageRef; //image reference
 		private Init imageTraite; //image qu'on veut comparer
 		private String stringImage; //image qu'on veut comparer
+		private Mat mat;
 		
 		public Run(String stringImage) {
 			this.stringImage = stringImage;
 			setImageRef();
 			setimageTraite(stringImage);
+		}
+		public Run(Mat mat) {
+			this.mat=mat;
+			setImageRef();
+			setimageTraite2(mat);
 		}
 		
 		public void go(){
@@ -23,18 +34,16 @@ public class Run {
 			List<Integer> listedesref=new ArrayList<>();
 			int indicemin=0;		
 			for (int i=0;i<imageRef.size();i++) {
-				System.out.println(i);
-				String a=DetectionImage.misealecchelle3(imageRef.get(i).getFichier(),imageTraite);
-				try {
-				    Integer b = Integer.parseInt(a);
-				    listedesref.add(b);
-				} catch (NumberFormatException e) {
-				    System.out.println("Error parsing " + a + " to an Integer");
-				    e.printStackTrace();
-				}
+				//System.out.println(i);
+				int a=DetectionImage.misealecchelle3(imageRef.get(i).getFichier(),imageTraite);
+				System.out.println(a);
+				  
+				    listedesref.add(a);
+				
+				
 			}
 			for(int i=0;i<listedesref.size();i++) {
-				if(listedesref.get(i)<=listedesref.get(indicemin)) {
+				if(listedesref.get(i)>=listedesref.get(indicemin)) {
 					indicemin=i;	
 				}}
 			DetectionImage.misealecchelle(imageRef.get(indicemin).getFichier(),imageTraite);
@@ -101,5 +110,8 @@ public class Run {
 	
 public void setimageTraite(String stringimage) {
 	this.imageTraite = new Init(stringimage);
+}
+public void setimageTraite2(Mat mat) {
+	this.imageTraite= new Init(mat); 
 }
 }

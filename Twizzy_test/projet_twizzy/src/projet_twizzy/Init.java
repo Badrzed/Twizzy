@@ -33,6 +33,18 @@ public class Init {
 		setDetectercontourlist (seuilplusieurdone,rand);
 		
 	}
+	@SuppressWarnings("exports")
+	public Init(Mat frame) {
+		this.imageread=frame;
+	/*setimageread(fichier);*/
+		sethsvimagemade(imageread);
+		setchannels(imageread);
+		setseuildone(hsvimagemade);
+		this.rand=new Random();
+		setContours(seuilplusieurdone, rand);
+		setDetectercontourlist (seuilplusieurdone,rand);
+		
+	}
 	
 	
 	
