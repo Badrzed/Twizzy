@@ -39,5 +39,6 @@ public class VideoPlayer extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
         mediaPlayer.play();
+      
     }
 }
