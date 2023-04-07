@@ -25,7 +25,7 @@ public class VideoPlayer extends Application {
 	public static void main(String[] args) {
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 		
-		Run nouvelleimage=new Run("ref70.png");
+		Run nouvelleimage=new Run("p2.png");
 		nouvelleimage.go();
 		//launch(args);
 		

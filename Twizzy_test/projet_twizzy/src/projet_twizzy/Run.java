@@ -43,7 +43,7 @@ public class Run {
 				
 			}
 			for(int i=0;i<listedesref.size();i++) {
-				if(listedesref.get(i)>=listedesref.get(indicemin)) {
+				if(listedesref.get(i)<=listedesref.get(indicemin)) {
 					indicemin=i;	
 				}}
 			DetectionImage.misealecchelle(imageRef.get(indicemin).getFichier(),imageTraite);
