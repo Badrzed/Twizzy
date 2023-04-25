@@ -94,12 +94,12 @@ public class Run {
 
 		public void setImageRef() {
 			 List<Init> imageRef=new ArrayList<>();
-					Init a1=new Init("ref30.png");
-					Init a2=new Init("ref50.png");
-					Init a3=new Init("ref70.png");
-					Init a4=new Init("ref90.png");
-					Init a5=new Init("ref110.png");
-					Init a6=new Init("refdouble.png");
+					Init a1=new Init("ref30.2.png");
+					Init a2=new Init("ref50.2.png");
+					Init a3=new Init("ref70.2.png");
+					Init a4=new Init("ref90.2.png");
+					Init a5=new Init("ref110.2.png");
+					Init a6=new Init("refdouble.2.png");
 					imageRef.add(a1);
 					imageRef.add(a2);
 					imageRef.add(a3);
