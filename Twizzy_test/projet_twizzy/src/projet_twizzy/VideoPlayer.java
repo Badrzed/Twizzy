@@ -23,15 +23,9 @@ public class VideoPlayer extends Application {
 	private static JPanel panel2 ;
 	
 	public static void main(String[] args) {
-		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-		
-		Run nouvelleimage=new Run("ref70.png");
-		nouvelleimage.go();
-		//launch(args);
-		
-		/*DetectionImage.ImShow("pascontour",image.getimageread());
-		DetectionImage.ImShow("contour",image.getContours());*/
-			}
+		launch(args);
+	}
+	
 
     @Override
     public void start(Stage primaryStage) {
@@ -47,18 +41,7 @@ public class VideoPlayer extends Application {
         mediaView.setFitHeight(scene.getHeight());
         primaryStage.setScene(scene);
         primaryStage.show();
-        mediaPlayer.play();
-      
+        mediaPlayer.play();  
     }
-    
-    public static void LectureVideo(String nomVideo) {
-    	Mat frame = new Mat();
-    	VideoCapture camera = new VideoCapture(nomVideo);
-
-    	while (camera.read(frame)) {
-    		Run nouvelleimage=new Run(frame);
-    		nouvelleimage.go();		 		
-    		}
-    	}
-    
+     
 }

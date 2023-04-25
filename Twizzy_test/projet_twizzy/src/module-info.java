@@ -11,4 +11,6 @@ module projet_twizzy {
 	exports projet_twizzy;
 	requires javafx.graphics;
 	requires javafx.media;
+	requires javafx.swing;
+	requires java.sql;
 }
