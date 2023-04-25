@@ -104,7 +104,7 @@ public class DetectionImage {
 				
 			}
 			else {
-				System.out.println("couldn't find ball");
+				
 				
 			}
 		}
@@ -247,7 +247,6 @@ public static  Mat misealecchelle2(String panel,Init object) {
 
 	}
 
-
 public static  int misealecchelle4(String panel,Init object) {
 	Mat sroadSign=Highgui.imread(panel);
 	Mat sObject=new Mat();
@@ -323,12 +322,7 @@ public static double misealecchelle5(String panel,Init object) {
 	Core.normalize(graySign,  graySign, 0, 255, Core.NORM_MINMAX);	
 	Mat tester = new Mat(sObject.rows(),sObject.cols(),sObject.type());
 	Core.subtract(graySign, grayObject, tester);
-	//System.out.println("une seule matrice"+tester.dump());
 	return Core.norm(tester);
-	//System.out.println(norm);
-	//Extraction des caractéristiques
-	
-	
 
 }
 

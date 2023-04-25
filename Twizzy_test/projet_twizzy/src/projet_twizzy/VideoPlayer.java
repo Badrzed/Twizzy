@@ -24,9 +24,11 @@ public class VideoPlayer extends Application {
 	
 	public static void main(String[] args) {
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-		
-		Run nouvelleimage=new Run("p2.png");
+		for(int i=2;i<11;i++) {
+		Run nouvelleimage=new Run("p"+i+".png");
 		nouvelleimage.go();
+		System.out.println(nouvelleimage.getPanneaudetecter());
+		}
 		//launch(args);
 		
 		/*DetectionImage.ImShow("pascontour",image.getimageread());
