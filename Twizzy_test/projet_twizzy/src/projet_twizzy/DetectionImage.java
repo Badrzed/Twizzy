@@ -93,11 +93,12 @@ public class DetectionImage {
 			matOfPoint2f.fromList(contour.toList());
 			Imgproc.minEnclosingCircle(matOfPoint2f, center, radius);
 			if((contourArea/(Math.PI*radius[0]*radius[0]))>=0.8) {
-				Core.circle(object.getimageread(), center, (int)radius[0], new Scalar(0,255,0),2);
+				//Core.circle(object.getimageread(), center, (int)radius[0], new Scalar(0,255,0),2);
 				Rect rect =Imgproc.boundingRect(contour);
-				Core.rectangle(object.getimageread(), new Point(rect.x,rect.y), new Point(rect.x+(double)rect.width,rect.y+(double)rect.height), new Scalar(0,255,0),2);
+				//Core.rectangle(object.getimageread(), new Point(rect.x,rect.y), new Point(rect.x+(double)rect.width,rect.y+(double)rect.height), new Scalar(0,255,0),2);
 				Mat tmp=object.getimageread().submat(rect.y,rect.y+rect.height,rect.x,rect.x+rect.width);
 				Mat ball=Mat.zeros(tmp.size(),tmp.type());
+				//ImShow("ball",tmp);
 				tmp.copyTo(ball);
 				return ball;
 				
@@ -306,6 +307,26 @@ public static  int misealecchelle4(String panel,Init object) {
 	Features2d.drawMatches(sObject,  objectKeyPoints,  sroadSign,  signKeypoints,  matchs,  matchedImage);
 	ImShow("Test",matchedImage);*/
 	//System.out.println();
+	
+	
+
+}
+public static double misealecchelle5(String panel,Init object) {
+	Mat sroadSign=Highgui.imread(panel);
+	Mat sObject=new Mat();
+	Imgproc.resize(object.getimageread(),sObject,sroadSign.size());
+	Mat grayObject=new Mat(sObject.rows(),sObject.cols(),sObject.type());
+	Imgproc.cvtColor(sObject,  grayObject, Imgproc.COLOR_BGRA2GRAY);
+	Core.normalize(grayObject, grayObject, 0, 255, Core.NORM_MINMAX);
+	Mat graySign = new Mat(sroadSign.rows(), sroadSign.cols(), sroadSign.type());
+	Imgproc.cvtColor(sroadSign,  graySign,  Imgproc.COLOR_BGRA2GRAY);
+	Core.normalize(graySign,  graySign, 0, 255, Core.NORM_MINMAX);	
+	Mat tester = new Mat(sObject.rows(),sObject.cols(),sObject.type());
+	Core.subtract(graySign, grayObject, tester);
+	//System.out.println("une seule matrice"+tester.dump());
+	return Core.norm(tester);
+	//System.out.println(norm);
+	//Extraction des caractéristiques
 	
 	
 

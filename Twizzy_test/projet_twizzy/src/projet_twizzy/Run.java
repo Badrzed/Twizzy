@@ -17,6 +17,7 @@ public class Run {
 		private String stringImage; //image qu'on veut comparer
 		private Mat mat;
 		
+		
 		public Run(String stringImage) {
 			this.stringImage = stringImage;
 			setImageRef();
@@ -31,12 +32,12 @@ public class Run {
 		public void go(){
 			Mat dect= DetectionImage.detection_ball(imageTraite);
 			imageTraite.changeimageread(dect);
-			List<Integer> listedesref=new ArrayList<>();
+			List<Double> listedesref=new ArrayList<>();
 			int indicemin=0;		
 			for (int i=0;i<imageRef.size();i++) {
 				//System.out.println(i);
-				int a=DetectionImage.misealecchelle3(imageRef.get(i).getFichier(),imageTraite);
-				System.out.println(a);
+				double a=DetectionImage.misealecchelle5(imageRef.get(i).getFichier(),imageTraite);
+			
 				  
 				    listedesref.add(a);
 				
@@ -114,4 +115,5 @@ public void setimageTraite(String stringimage) {
 public void setimageTraite2(Mat mat) {
 	this.imageTraite= new Init(mat); 
 }
+
 }
