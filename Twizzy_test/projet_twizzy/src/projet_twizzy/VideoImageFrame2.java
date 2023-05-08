@@ -1,22 +1,20 @@
 package projet_twizzy;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.io.File;
-import java.awt.BorderLayout;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import org.opencv.core.Core;
 import org.opencv.core.Mat;
-import org.opencv.highgui.*;
-import org.opencv.highgui.Highgui;
 //import org.opencv.imgcodecs.Imgcodecs;
-
+import org.opencv.highgui.*;
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
-
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -25,25 +23,40 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
+import javafx.stage.Screen;
 
 class VideoImageFrame2 extends JFrame {
+	
+public static void main(String[] args) {	
+	System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+	    EventQueue.invokeLater(() -> {
+            VideoImageFrame2 frame = new VideoImageFrame2(); 
+            frame.setVisible(true);     
+        });
+	   			
+			}
 
     private JFXPanel jfxPanel;
     
-    private GridPane gridPane;
+    private static GridPane gridPane;
     private MediaPlayer mediaPlayer;
-    private ImageView imageView;
+    private static ImageView imageView;
     private Scene scene;
     public String videoPath;
-    public String imagePath;
+    public static String imagePath;
     public MyThread myThread;
+    private static JPanel panelPrinc;
+    private static JPanel imageDetec;
+    private JPanel controlPanel;
    
 
     public VideoImageFrame2() {
-        setTitle("Video Image App");
+
+        setTitle("Twuzzy");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new BorderLayout());
-        setSize(1200, 600);
+        setBounds(0,1,1300,700);
+        //setLayout(new BorderLayout());
+        //setSize(1200, 600);
 
         jfxPanel = new JFXPanel();
         add(jfxPanel, BorderLayout.CENTER);
@@ -53,17 +66,46 @@ class VideoImageFrame2 extends JFrame {
         });
 
         JPanel controlPanel = new JPanel();
+        controlPanel.setBorder(new EmptyBorder(5,5,5,5));
+        setContentPane(controlPanel);
+        controlPanel.setLayout(null);
+        controlPanel.setBackground(Color.blue);
+        
+        JPanel panel = new JPanel();
+        panel.setBounds(10,10,1260,639);
+        panel.setLayout(null);
+        
+        
+        panelPrinc = new JPanel();
+        imageDetec = new JPanel();
+        imageDetec.setBackground(Color.lightGray);
+        imageDetec.setBounds(10, 240, 254, 254);
+        panelPrinc.setBackground(Color.lightGray);
+        panelPrinc.setBounds(274, 46, 880, 582);
         JButton loadVideoButton = new JButton("Charger vidéo");
-        JButton loadImageButton = new JButton("Charger image");
-        JButton playPauseButton = new JButton("Lancer/Pause");
-        controlPanel.add(loadVideoButton);
-        controlPanel.add(loadImageButton);
-        controlPanel.add(playPauseButton);
-        add(controlPanel, BorderLayout.SOUTH);
-
         loadVideoButton.addActionListener(e -> loadVideo());
-        loadImageButton.addActionListener(e -> loadImage());
+        loadVideoButton.setBounds(10,70,200,20);
+        //JButton loadImageButton = new JButton("Charger image");
+        JButton playPauseButton = new JButton("Lancer/Pause");
         playPauseButton.addActionListener(e -> togglePlayPause());
+        playPauseButton.setBounds(10,40,200,20);
+        panel.add(panelPrinc);
+        panel.add(imageDetec);
+        
+        //panel.add(playPauseButton);
+        //panel.add(loadVideoButton);
+        
+        controlPanel.add(loadVideoButton);
+        //controlPanel.add(loadImageButton);
+        controlPanel.add(playPauseButton);
+        controlPanel.add(panel);
+        //add(controlPanel, BorderLayout.SOUTH);
+        //add(imageDetec);
+        //add(panelPrinc);
+
+        
+        //loadImageButton.addActionListener(e -> loadImage());
+        
     }
     private void initJavaFX() {
        
@@ -74,7 +116,11 @@ class VideoImageFrame2 extends JFrame {
         jfxPanel.setScene(scene);
     }
     private void loadImage() {
-    	imagePath ="https://s2.coinmarketcap.com/static/img/coins/64x64/1.png";
+    	//imagePath ="https://s2.coinmarketcap.com/static/img/coins/64x64/1.png";
+    	imagePath = "camera6.jpg";
+    	Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+        double screenWidth = screenBounds.getWidth();
+        double screenHeight = screenBounds.getHeight();
         if (imagePath.equalsIgnoreCase("")) {
         	 JFileChooser fileChooser = new JFileChooser();
              fileChooser.setFileFilter(new FileNameExtensionFilter("Fichiers image", "jpg", "png", "bmp", "gif"));
@@ -83,10 +129,11 @@ class VideoImageFrame2 extends JFrame {
                 File selectedFile = fileChooser.getSelectedFile();
                 Platform.runLater(() -> {
                     Image image = new Image(selectedFile.toURI().toString());
+                   
                     imageView = new ImageView(image);
                     imageView.setPreserveRatio(true);
-                    imageView.setFitHeight(1200);
-                    imageView.setFitWidth(600);
+                    imageView.setFitHeight(screenWidth/2);
+                    imageView.setFitWidth(screenHeight);
             
               
                     gridPane.add(imageView, 0, 0);
@@ -94,12 +141,13 @@ class VideoImageFrame2 extends JFrame {
                 });
             }
         }else {
+        	
                 Platform.runLater(() -> {
-                    Image image = new Image(imagePath);
+                    Image image = new Image(new File(imagePath).toURI().toString());
                     imageView = new ImageView(image);
                     imageView.setPreserveRatio(true);
-                    imageView.setFitHeight(1200);
-                    imageView.setFitWidth(600);
+                    imageView.setFitHeight(screenWidth/2);
+                    imageView.setFitWidth(screenHeight);
             
               
                     gridPane.add(imageView, 0, 0);
@@ -109,11 +157,32 @@ class VideoImageFrame2 extends JFrame {
         }
         
     }
+    
+    private static void chargerImage(String chemin) {
+    	 Platform.runLater(() -> {  
+    		 System.out.println("ok");
+    	Image image = new Image(new File(chemin).toURI().toString());
+    	  Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+          double screenWidth = screenBounds.getWidth();
+          double screenHeight = screenBounds.getHeight();
+        
+        imageView = new ImageView(image);
+        imageView.setPreserveRatio(true);
+        imageView.setFitHeight(screenWidth/2);
+        imageView.setFitWidth(screenHeight);
+
+  
+        gridPane.add(imageView, 1, 0);
+    	 });}
+    
     private void loadVideo() {
        
         //videoPath="https://arche.univ-lorraine.fr/pluginfile.php/1004382/mod_resource/content/0/video1.mp4";
         //videoPath ="video.mp4";
         videoPath = "C:/Users/idris/Downloads/videoFinale.mp4";
+        Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+        double screenWidth = screenBounds.getWidth();
+        double screenHeight = screenBounds.getHeight();
         if (videoPath.equalsIgnoreCase("")) {
         	 JFileChooser fileChooser = new JFileChooser();
              fileChooser.setFileFilter(new FileNameExtensionFilter("Fichiers vidéo", "mp4", "avi", "flv", "mkv", "mov"));
@@ -132,10 +201,10 @@ class VideoImageFrame2 extends JFrame {
                      mediaPlayer = new MediaPlayer(media);
                      MediaView mediaView = new MediaView(mediaPlayer);
                      mediaView.setPreserveRatio(true);
-                     mediaView.setFitHeight(1200);
-                     mediaView.setFitWidth(900);
+                     mediaView.setFitHeight(screenWidth/2);
+                     mediaView.setFitWidth(screenHeight);
                    
-                     gridPane.add(mediaView, 1, 0);
+                     gridPane.add(mediaView, 0, 0);
                  });
                  MyThread myThread = new MyThread(videoPath);
                  myThread.run();
@@ -153,14 +222,14 @@ class VideoImageFrame2 extends JFrame {
                      mediaPlayer = new MediaPlayer(media);
                      MediaView mediaView = new MediaView(mediaPlayer);
                      mediaView.setPreserveRatio(true);
-                     //mediaView.setFitHeight(1200);
-                     //mediaView.setFitWidth(900);
+                     mediaView.setFitHeight(screenWidth/2);
+                     mediaView.setFitWidth(screenHeight);
                    
                      gridPane.add(mediaView, 1, 0);
                  });
-                 MyThread myThread = new MyThread(videoPath);
+                 //MyThread myThread = new MyThread(videoPath);
                  //MyThread myThread = new MyThread(new File(videoPath).toURI().toString());
-                 myThread.run();
+                 //myThread.run();
             
         }
        
@@ -172,40 +241,140 @@ class VideoImageFrame2 extends JFrame {
                 mediaPlayer.pause();
             } else if (status == MediaPlayer.Status.PAUSED || status == MediaPlayer.Status.STOPPED || status == MediaPlayer.Status.READY) {
                 mediaPlayer.play();
+                MyThread myThread = new MyThread(videoPath);
+                //MyThread myThread = new MyThread(new File(videoPath).toURI().toString());
+                myThread.start();
+                //myThread.run();
             }
         }
+        
     }
     public static void LectureVideo(String nomVideo) {
-    	VideoCapture camera = new VideoCapture(nomVideo);
-    	camera.open(NORMAL);
-    	Mat frame = new Mat();
-    	//camera.open(nomVideo);
-    	if (!camera.isOpened()) {
-    		System.out.println("camera is closed");
-    	}else { 		
-        		if (camera.read(frame)){
-                    System.out.println("Frame Obtained");
-                    System.out.println("Captured Frame Width " + frame.width() + " Height " + frame.height());
-                    //Imgcodecs.imwrite("c://capture/camera.jpg", frame);
-                    //System.out.println("OK");
-                    
-                
-    	}
-    	}
-    	}
-    public static void LectureVideo2(String nomVideo) {
-    	VideoCapture camera = new VideoCapture(0);
+    	System.load("C:\\Users\\idris\\Downloads\\opencv\\build\\x64\\vc14\\bin\\opencv_ffmpeg2413_64.dll");
+		VideoCapture camera = new VideoCapture(nomVideo);
+		
+		camera.open(nomVideo);
+		String im ="";
     	Mat frame = new Mat();
     	if (!camera.isOpened()) {
-    		System.out.println("camera is closed");
+    		System.out.println("camera is closed my thread");
     	}else {
+    		int n = 0;
     		while (camera.read(frame)) {
         		System.out.println("Frame Obtained");
-        		//Run nouvelleimage=new Run(frame);
-        		//nouvelleimage.go();		 		
-        		}
+        		//Imgproc.resize(frame, frame, new Size(800, 600));
+        		System.out.println(frame.size());
+        		//Highgui.imwrite("camera"+Integer.toString(n)+".png", frame);
+        		Run nouvelleimage=new Run(frame);
+        		nouvelleimage.go();
+        		System.out.println(nouvelleimage.getPanneaudetecter());
+        			im = nouvelleimage.getPanneaudetecter();
+        		
+        		
+    		/*
+    		switch(im) {
+			case "panneau30":
+				chargerImage("ref30.png");
+				break;
+			
+			case "panneau50":
+				chargerImage("ref50.png");
+				break;
+			case "panneau70":
+				chargerImage("ref70.png");
+				break;
+			case "panneau90":
+				chargerImage("ref90.png");
+				break;
+			case "panneau110":
+				chargerImage("ref110.png");
+				break;
+			case "doublevoiture":
+				chargerImage("refdouble.png");
+				break;
+			default:
+				chargerImage("p30.png");
+				break;
+    	}*/
+    	}
+
     	}
     	
     	}
+    public static  void LectureVideo2(String nomVideo) {
+    	System.load("C:\\Users\\idris\\Downloads\\opencv\\build\\x64\\vc14\\bin\\opencv_ffmpeg2413_64.dll");
+		VideoCapture camera = new VideoCapture(nomVideo);
+		
+		camera.open(nomVideo);
+    	Mat frame = new Mat();
+    	
+    	
+    	if (!camera.isOpened()) {
+    		System.out.println("camera is closed");
+    	}else {
+    		while(camera.read(frame)) {
+    			String fileImg = "";
+    			panelPrinc.removeAll();
+    			panelPrinc.add(new JLabel(new ImageIcon(mat2bufferedImage(frame))));
+    			panelPrinc.repaint();
+    	
+    			panelPrinc.validate();
+    			//DetectionImage.ImShow("fsf",frame);
+    			Init object2 = new Init(frame);
+    	        Run nouvelleImage = new Run(object2.getimageread());
+    	        nouvelleImage.go();
+    	        //System.out.println(b.getPanneaudetecter());
+    	        
     
+    			
+    			String detect = nouvelleImage.getPanneaudetecter();
+    			System.out.println(detect);
+    			
+    			switch(detect) {
+    			case "panneau30":
+    				fileImg = "ref30.png";
+    				break;
+    			case "panneau50":
+    				fileImg = "ref50.png";
+    				break;
+    			case "panneau70":
+    				fileImg = "ref70.png";
+    				break;
+    			case "panneau90":
+    				fileImg = "ref90.png";
+    				break;
+    			case "panneau110":
+    				fileImg = "ref110.png";
+    				break;
+    			case "doublevoiture":
+    				fileImg = "refdouble.png";
+    				break;
+    			default:
+    				fileImg = "vide.jpg";
+    				break;
+    			
+    			}
+    			imageDetec.removeAll();
+				imageDetec.repaint();
+				imageDetec.add(new JLabel(new ImageIcon(fileImg)));
+    			imageDetec.validate();
+    	}
+    	}
+    	}
+	private static BufferedImage mat2bufferedImage(Mat mat) {
+		int type = BufferedImage.TYPE_BYTE_GRAY;
+        if (mat.channels() > 1) {
+            type = BufferedImage.TYPE_3BYTE_BGR;
+        }
+        int bufferSize = mat.channels() * mat.cols() * mat.rows();
+        byte[] buffer = new byte[bufferSize];
+        mat.get(0, 0, buffer);
+        BufferedImage image = new BufferedImage(mat.cols(), mat.rows(), type);
+        final byte[] targetPixels = ((java.awt.image.DataBufferByte) image.getRaster().getDataBuffer()).getData();
+        System.arraycopy(buffer, 0, targetPixels, 0, buffer.length);
+        return image;
+	}
+	
+	 
+
 }

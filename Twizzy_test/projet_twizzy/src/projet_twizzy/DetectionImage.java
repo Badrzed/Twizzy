@@ -93,17 +93,18 @@ public class DetectionImage {
 			matOfPoint2f.fromList(contour.toList());
 			Imgproc.minEnclosingCircle(matOfPoint2f, center, radius);
 			if((contourArea/(Math.PI*radius[0]*radius[0]))>=0.8) {
-				Core.circle(object.getimageread(), center, (int)radius[0], new Scalar(0,255,0),2);
+				//Core.circle(object.getimageread(), center, (int)radius[0], new Scalar(0,255,0),2);
 				Rect rect =Imgproc.boundingRect(contour);
-				Core.rectangle(object.getimageread(), new Point(rect.x,rect.y), new Point(rect.x+(double)rect.width,rect.y+(double)rect.height), new Scalar(0,255,0),2);
+				//Core.rectangle(object.getimageread(), new Point(rect.x,rect.y), new Point(rect.x+(double)rect.width,rect.y+(double)rect.height), new Scalar(0,255,0),2);
 				Mat tmp=object.getimageread().submat(rect.y,rect.y+rect.height,rect.x,rect.x+rect.width);
 				Mat ball=Mat.zeros(tmp.size(),tmp.type());
+				//ImShow("ball",tmp);
 				tmp.copyTo(ball);
 				return ball;
 				
 			}
 			else {
-				System.out.println("couldn't find ball");
+				
 				
 			}
 		}
@@ -245,5 +246,84 @@ public static  Mat misealecchelle2(String panel,Init object) {
 		
 
 	}
+
+public static  int misealecchelle4(String panel,Init object) {
+	Mat sroadSign=Highgui.imread(panel);
+	Mat sObject=new Mat();
+	Imgproc.resize(object.getimageread(),sObject,sroadSign.size());
+	Mat grayObject=new Mat(sObject.rows(),sObject.cols(),sObject.type());
+	Imgproc.cvtColor(sObject,  grayObject, Imgproc.COLOR_BGRA2GRAY);
+	Core.normalize(grayObject, grayObject, 0, 255, Core.NORM_MINMAX);
+	Mat graySign = new Mat(sroadSign.rows(), sroadSign.cols(), sroadSign.type());
+	Imgproc.cvtColor(sroadSign,  graySign,  Imgproc.COLOR_BGRA2GRAY);
+	Core.normalize(graySign,  graySign, 0, 255, Core.NORM_MINMAX);	
+	//Extraction des caractéristiques
+	FeatureDetector orbDetector = FeatureDetector.create(FeatureDetector.ORB);
+	DescriptorExtractor orbExtractor = DescriptorExtractor.create(DescriptorExtractor.ORB);
+	MatOfKeyPoint objectKeyPoints = new MatOfKeyPoint();
+	orbDetector.detect(grayObject, objectKeyPoints);
+	MatOfKeyPoint signKeypoints = new MatOfKeyPoint();
+	orbDetector.detect(graySign, signKeypoints);
+	Mat objectDescriptor = new Mat(object.getimageread().rows(), object.getimageread().cols(), object.getimageread().type());
+	orbExtractor.compute(grayObject, objectKeyPoints, objectDescriptor);
+	Mat signDescriptor = new Mat(sroadSign.rows(), sroadSign.cols(), sroadSign.type());
+	orbExtractor.compute(grayObject, signKeypoints, signDescriptor);	
+		//matching
+	MatOfDMatch matchs = new MatOfDMatch();
+	DescriptorMatcher matcher = DescriptorMatcher.create(DescriptorMatcher.BRUTEFORCE);
+	matcher.match(objectDescriptor, signDescriptor, matchs);
+	String str= matchs.dump();
+	//System.out.println(str);
+	String[] sentences = str.split("\\s*(; |, |\\s)\\s*");
+	
+	/*Ici j'ai pris le matchs.dump qui donne la matrice des matcher et j'ai recuperer les donnees
+	 * de la matrice matcher et j'ai fait la moyenne de la deuxieme collonne sachant qu'il il ya 4 colonnes et 266 lignes 
+	 * il faut recuperer la deuxieme valeur de chaque lignes sachant qu'on a decouper la matrice en une liste qui contient toutes les valeurs */
+	int sum=0;
+	int nombredeterme=sentences.length;
+	for(int i=1;i<sentences.length;i=i+4) {//ici on commence a 1 pour prendre la deuxieme valeur de la ligne 1
+		//on itere de 4 en 4 car 4 colonne et on veut toujours la deuxieme colonnne
+		try {
+		    Integer b = Integer.parseInt(sentences[i]);
+		    int c=  misealecchelle3(panel,object);
+		   if( Math.abs(b-c)<100) {// utiliser d'
+		    sum=sum+b;
+		    }
+		   else{
+			   nombredeterme--;
+		   }
+		} catch (NumberFormatException e) {
+		    System.out.println("Error parsing " + sentences[i] + " to an Integer");
+		    e.printStackTrace();
+		}
+		
+	}
+	//System.out.println(sentences.length);
+	return sum/nombredeterme;// et donc la fonction renvoie la moyenne de la deuxieme colonne
+	
+	//System.out.println(matchs.dump());
+	/*Mat matchedImage = new Mat(sroadSign.rows(), sroadSign.cols()*2, sroadSign.type());
+	Features2d.drawMatches(sObject,  objectKeyPoints,  sroadSign,  signKeypoints,  matchs,  matchedImage);
+	ImShow("Test",matchedImage);*/
+	//System.out.println();
+	
+	
+
+}
+public static double misealecchelle5(String panel,Init object) {
+	Mat sroadSign=Highgui.imread(panel);
+	Mat sObject=new Mat();
+	Imgproc.resize(object.getimageread(),sObject,sroadSign.size());
+	Mat grayObject=new Mat(sObject.rows(),sObject.cols(),sObject.type());
+	Imgproc.cvtColor(sObject,  grayObject, Imgproc.COLOR_BGRA2GRAY);
+	Core.normalize(grayObject, grayObject, 0, 255, Core.NORM_MINMAX);
+	Mat graySign = new Mat(sroadSign.rows(), sroadSign.cols(), sroadSign.type());
+	Imgproc.cvtColor(sroadSign,  graySign,  Imgproc.COLOR_BGRA2GRAY);
+	Core.normalize(graySign,  graySign, 0, 255, Core.NORM_MINMAX);	
+	Mat tester = new Mat(sObject.rows(),sObject.cols(),sObject.type());
+	Core.subtract(graySign, grayObject, tester);
+	return Core.norm(tester);
+
+}
 
 }
