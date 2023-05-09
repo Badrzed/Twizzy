@@ -55,9 +55,6 @@ public static void main(String[] args) {
         setTitle("Twuzzy");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(0,1,1300,700);
-        //setLayout(new BorderLayout());
-        //setSize(1200, 600);
-
         jfxPanel = new JFXPanel();
         add(jfxPanel, BorderLayout.CENTER);
 
@@ -85,26 +82,17 @@ public static void main(String[] args) {
         JButton loadVideoButton = new JButton("Charger vidéo");
         loadVideoButton.addActionListener(e -> loadVideo());
         loadVideoButton.setBounds(10,70,200,20);
-        //JButton loadImageButton = new JButton("Charger image");
         JButton playPauseButton = new JButton("Lancer/Pause");
         playPauseButton.addActionListener(e -> togglePlayPause());
         playPauseButton.setBounds(10,40,200,20);
         panel.add(panelPrinc);
         panel.add(imageDetec);
         
-        //panel.add(playPauseButton);
-        //panel.add(loadVideoButton);
         
         controlPanel.add(loadVideoButton);
-        //controlPanel.add(loadImageButton);
         controlPanel.add(playPauseButton);
         controlPanel.add(panel);
-        //add(controlPanel, BorderLayout.SOUTH);
-        //add(imageDetec);
-        //add(panelPrinc);
-
-        
-        //loadImageButton.addActionListener(e -> loadImage());
+       
         
     }
     private void initJavaFX() {
@@ -114,48 +102,6 @@ public static void main(String[] args) {
         scene = new Scene(gridPane);
 
         jfxPanel.setScene(scene);
-    }
-    private void loadImage() {
-    	//imagePath ="https://s2.coinmarketcap.com/static/img/coins/64x64/1.png";
-    	imagePath = "camera6.jpg";
-    	Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
-        double screenWidth = screenBounds.getWidth();
-        double screenHeight = screenBounds.getHeight();
-        if (imagePath.equalsIgnoreCase("")) {
-        	 JFileChooser fileChooser = new JFileChooser();
-             fileChooser.setFileFilter(new FileNameExtensionFilter("Fichiers image", "jpg", "png", "bmp", "gif"));
-             int returnValue = fileChooser.showOpenDialog(null);
-        	if (returnValue == JFileChooser.APPROVE_OPTION) {
-                File selectedFile = fileChooser.getSelectedFile();
-                Platform.runLater(() -> {
-                    Image image = new Image(selectedFile.toURI().toString());
-                   
-                    imageView = new ImageView(image);
-                    imageView.setPreserveRatio(true);
-                    imageView.setFitHeight(screenWidth/2);
-                    imageView.setFitWidth(screenHeight);
-            
-              
-                    gridPane.add(imageView, 0, 0);
-                    
-                });
-            }
-        }else {
-        	
-                Platform.runLater(() -> {
-                    Image image = new Image(new File(imagePath).toURI().toString());
-                    imageView = new ImageView(image);
-                    imageView.setPreserveRatio(true);
-                    imageView.setFitHeight(screenWidth/2);
-                    imageView.setFitWidth(screenHeight);
-            
-              
-                    gridPane.add(imageView, 0, 0);
-                    
-                });
-            
-        }
-        
     }
     
     private static void chargerImage(String chemin) {
@@ -194,9 +140,7 @@ public static void main(String[] args) {
                          mediaPlayer.stop();
                      }
                      Media media = new Media(selectedFile.toURI().toString());
-                     //MyThread myThread = new MyThread(selectedFile.toURI().toString());
-                     //System.out.println(selectedFile.toURI().toString());
-                     //myThread.run();
+                  
                      
                      mediaPlayer = new MediaPlayer(media);
                      MediaView mediaView = new MediaView(mediaPlayer);
@@ -227,9 +171,7 @@ public static void main(String[] args) {
                    
                      gridPane.add(mediaView, 1, 0);
                  });
-                 //MyThread myThread = new MyThread(videoPath);
-                 //MyThread myThread = new MyThread(new File(videoPath).toURI().toString());
-                 //myThread.run();
+                
             
         }
        
@@ -269,33 +211,7 @@ public static void main(String[] args) {
         		nouvelleimage.go();
         		System.out.println(nouvelleimage.getPanneaudetecter());
         			im = nouvelleimage.getPanneaudetecter();
-        		
-        		
-    		/*
-    		switch(im) {
-			case "panneau30":
-				chargerImage("ref30.png");
-				break;
-			
-			case "panneau50":
-				chargerImage("ref50.png");
-				break;
-			case "panneau70":
-				chargerImage("ref70.png");
-				break;
-			case "panneau90":
-				chargerImage("ref90.png");
-				break;
-			case "panneau110":
-				chargerImage("ref110.png");
-				break;
-			case "doublevoiture":
-				chargerImage("refdouble.png");
-				break;
-			default:
-				chargerImage("p30.png");
-				break;
-    	}*/
+		
     	}
 
     	}
@@ -317,18 +233,15 @@ public static void main(String[] args) {
     			panelPrinc.removeAll();
     			panelPrinc.add(new JLabel(new ImageIcon(mat2bufferedImage(frame))));
     			panelPrinc.repaint();
-    	
     			panelPrinc.validate();
-    			//DetectionImage.ImShow("fsf",frame);
-    			Init object2 = new Init(frame);
-    	        Run nouvelleImage = new Run(object2.getimageread());
-    	        nouvelleImage.go();
-    	        //System.out.println(b.getPanneaudetecter());
-    	        
-    
     			
+    			
+    			System.out.println(frame);
+    			
+    	        Run nouvelleImage = new Run(frame);
+    	        nouvelleImage.go();
     			String detect = nouvelleImage.getPanneaudetecter();
-    			System.out.println(detect);
+    			
     			
     			switch(detect) {
     			case "panneau30":
@@ -346,8 +259,8 @@ public static void main(String[] args) {
     			case "panneau110":
     				fileImg = "ref110.png";
     				break;
-    			case "doublevoiture":
-    				fileImg = "refdouble.png";
+    			case "rien":
+    				fileImg = "vide.png";
     				break;
     			default:
     				fileImg = "vide.jpg";

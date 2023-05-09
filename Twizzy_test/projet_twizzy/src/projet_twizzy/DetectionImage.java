@@ -82,7 +82,8 @@ public class DetectionImage {
 		
 	}	
 	public static Mat detection_ball(Init object) {
-		Mat matricenull=new Mat();
+		Mat matricenull=new Mat(1080, 1920, CvType.CV_8UC3);
+		
 		List<MatOfPoint>contours=object.getDetectercontourlist();
 		MatOfPoint2f matOfPoint2f =new MatOfPoint2f();
 		float[] radius =new float[1];

@@ -25,7 +25,6 @@ public class Run {
 			setimageTraite(stringImage);
 			this.setPanneaudetecter("aucun paneau detecter");
 		}
-		@SuppressWarnings("exports")
 		public Run(Mat mat) {
 			setImageRef();
 			this.imageTraite = new Init(mat);
@@ -34,17 +33,20 @@ public class Run {
 		
 		public void go(){
 			Mat dect= DetectionImage.detection_ball(imageTraite);
+			System.out.println(dect);
+			System.out.println(dect.channels());
 			imageTraite.changeimageread(dect);
 			List<Double> listedesref=new ArrayList<>();
-			int indicemin=0;	
-			
+			int indicemin=0;		
 			for (int i=0;i<imageRef.size();i++) {
 				//System.out.println(i);
 				double a=DetectionImage.misealecchelle5(imageRef.get(i).getFichier(),imageTraite);  
 				    listedesref.add(a);
 				
 			}
+			
 			for(int i=0;i<listedesref.size();i++) {
+				
 				if(listedesref.get(i)<=listedesref.get(indicemin)) {
 					indicemin=i;	
 				}}
@@ -67,7 +69,7 @@ public class Run {
 				this.panneaudetecter="panneau110";
 				break;
 			case 5:
-				this.panneaudetecter="doublevoiture";
+				this.panneaudetecter="rien";
 				break;
 			default:
 				this.panneaudetecter="pas de panneau";
